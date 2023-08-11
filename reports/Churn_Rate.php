@@ -115,11 +115,19 @@ for ($tmonth = 1; $tmonth <= 12; $tmonth++)
         $domains['end'][$tmonth] = $domains['start'][$tmonth] + $domains['variation'][$tmonth];
     }
 
-    $productsChurnRate = number_format(($products['terminated'][$tmonth] / $products['start'][$tmonth]) * 100, 1, '.', '') + 0;
-    $domainsChurnRate = number_format(($domains['terminated'][$tmonth] / $domains['start'][$tmonth]) * 100, 1, '.', '') + 0;
+    // PHP 8.1 
+    $productsChurnRate = 0; // Standardwert setzen
+    $domainsChurnRate = 0; // Standardwert setzen
+    
+    if (isset($products['terminated'][$tmonth], $products['start'][$tmonth]) && $products['start'][$tmonth] != 0) {
+        $productsChurnRate = number_format(($products['terminated'][$tmonth] / $products['start'][$tmonth]) * 100, 1, '.', '') + 0;
+    }
 
-    if (sprintf("%02d", $tmonth) > $month AND date('Y') == $year)
-    {
+    if (isset($domains['terminated'][$tmonth], $domains['start'][$tmonth]) && $domains['start'][$tmonth] != 0) {
+        $domainsChurnRate = number_format(($domains['terminated'][$tmonth] / $domains['start'][$tmonth]) * 100, 1, '.', '') + 0;
+    }
+
+    if (sprintf("%02d", $tmonth) > $month AND date('Y') == $year) {
         $dateMonthYear = '<span data-toggle="tooltip" data-placement="top" title="" data-original-title="Statistics for current month are inaccurate as renewals still have to occur">' . $dateMonthYear . ' <i class="fas fa-info-circle" style="opacity:0.8;"></i></span>';
     }
 
